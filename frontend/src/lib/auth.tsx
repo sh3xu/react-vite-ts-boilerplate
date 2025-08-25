@@ -35,13 +35,7 @@ async function loadUser() {
 async function loginFn(data: LoginCredentialsDTO) {
   const response = await loginWithEmailAndPassword(data);
   const user = await handleUserResponse(response);
-  // const user = {
-  //   first_name : "Super",
-  //   last_name: "Admin",
-  //   email: "super@admin.com",
-  //   phone: "+917357798661"
-  // }
-  // return user;
+  return user;
 }
 
 async function registerFn(data: RegisterCredentialsDTO) {
@@ -69,4 +63,4 @@ const authConfig = {
   },
 };
 
-export const { AuthLoader, useUser, useLogin } = configureAuth(authConfig);
+export const { AuthLoader, useUser, useLogin, useRegister, useLogout } = configureAuth(authConfig);

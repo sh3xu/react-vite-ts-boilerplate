@@ -2,28 +2,30 @@ import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { Button } from "@/components/Elements";
 import { Form, InputField } from "@/components/Form";
-import { useLogin } from "@/lib/auth";
+import { useRegister } from "@/lib/auth";
 import "../routes/auth.css";
 import { AnimatePresence, motion } from "framer-motion";
 import { animations } from "./Layout";
 import useAnimateFn from "@/hooks/animate";
 
 const schema = z.object({
+  name: z.string().min(1, "Please enter name"),
   email: z.string().min(1, "Please enter email address"),
   password: z.string().min(1, "Please enter password"),
 });
 
-type LoginValues = {
+type RegisterValues = {
+  name: string;
   email: string;
   password: string;
 };
 
-type LoginFormProps = {
+type RegisterFormProps = {
   onSuccess: () => void;
 };
 
-export const RegisterForm = ({ onSuccess }: LoginFormProps) => {
-  const login = useLogin();
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const registerFn = useRegister();
   const navigate = useNavigate();
   const { animate, callAfterAnimateFn } = useAnimateFn();
 
@@ -34,14 +36,21 @@ export const RegisterForm = ({ onSuccess }: LoginFormProps) => {
           <div className="card p-4 mt-4 mx-4">
             <h5>Register</h5>
             <h6 className="mb-4 font-light">Please enter your detail to sign up</h6>
-            <Form<LoginValues, typeof schema>
+            <Form<RegisterValues, typeof schema>
               onSubmit={async (values) => {
-                login.mutate(values, { onSuccess });
+                registerFn.mutate(values, { onSuccess });
               }}
               schema={schema}
             >
               {({ register, formState }) => (
                 <>
+                  <InputField
+                    type="text"
+                    label="Name"
+                    blueLabel
+                    error={formState.errors["name"]}
+                    registration={register("name")}
+                  />
                   <InputField
                     type="email"
                     label="Email Address"
@@ -58,11 +67,11 @@ export const RegisterForm = ({ onSuccess }: LoginFormProps) => {
                   <div className="d-flex justify-content-center">
                     <Button
                       startIcon={<i className="fa-solid fa-lock" />}
-                      isLoading={login.isLoading}
+                      isLoading={registerFn.isLoading}
                       type="submit"
                       className="w-100"
                     >
-                      Log In
+                      Register
                     </Button>
                   </div>
                 </>

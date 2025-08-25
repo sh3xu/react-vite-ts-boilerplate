@@ -39,8 +39,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 login.mutate(values, { onSuccess });
               }}
               options={{ defaultValues: {
-                email: "baba@yopmail.com",
-                password: "@3"
+                email: "test@yopmail.com",
+                password: "Test@123"
               }}}
               schema={schema}
             >

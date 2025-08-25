@@ -11,6 +11,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useLogout } from "@/lib/auth";
 
 export default function TopBar({
   toggled,
@@ -21,6 +22,7 @@ export default function TopBar({
   broken: boolean;
   setToggled: (i: boolean) => void;
 }) {
+  const logoutFn = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -43,8 +45,10 @@ export default function TopBar({
   };
 
   const logout = () => {
-    handleMenuClose();
-    navigate('/auth/login');
+    logoutFn.mutate({}, { onSuccess: () => {
+      handleMenuClose();
+      navigate('/auth/login');
+    }})
   }
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
