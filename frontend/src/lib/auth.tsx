@@ -13,6 +13,8 @@ import storage from "@/lib/storage";
 
 async function handleUserResponse(data: UserResponse) {
   const { tokens, user } = data;
+  console.log(user);
+  
   storage.setToken(tokens.access.token);
   return user;
 }
@@ -20,16 +22,9 @@ async function handleUserResponse(data: UserResponse) {
 async function loadUser() {
   if (storage.getToken()) {
     const data = await getUser();
-    return data;
+    return data.data;
   }
   return null;
-  // const user = {
-  //   first_name : "Super",
-  //   last_name: "Admin",
-  //   email: "super@admin.com",
-  //   phone: "+917357798661"
-  // }
-  // return user;
 }
 
 async function loginFn(data: LoginCredentialsDTO) {

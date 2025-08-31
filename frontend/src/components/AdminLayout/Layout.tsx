@@ -1,5 +1,5 @@
 import React from "react";
-import { SidebarComponent } from "@/components/Layout/Sidebar/SidebarComponent";
+import { SidebarComponent } from "@/components/AdminLayout/Sidebar/SidebarComponent";
 import TopBar from "./TopBar/TopBar";
 
 const Layout = ({ children }: { children: React.ReactElement }) => {
@@ -19,9 +19,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
       />
       <main className="w-100">
         <TopBar toggled={toggled} setToggled={setToggled} broken={broken} />
-        <div style={{ height: "90vh", overflow: "auto" }}>
-            {children}
-        </div>
+        <div style={{ height: "90vh", overflow: "auto" }}>{children}</div>
       </main>
     </div>
   );

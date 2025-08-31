@@ -4,8 +4,6 @@ const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
 const adminRoute = require('./admin/index');
 const config = require('../../config/config');
-const attendentRouter = require('./floorAttendent');
-const personRouter = require('./numberPerson');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -21,14 +19,6 @@ const defaultRoutes = [
     path: '/admin',
     route: adminRoute,
   },
-  {
-    path:"/attendant",
-    route:attendentRouter
-  },
-  {
-    path:"/person",
-    route:personRouter
-  }
 ];
 
 const devRoutes = [

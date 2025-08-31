@@ -1,9 +1,9 @@
-import ContentWrapper from '@/components/Layout/ContentWrapper'
+import ContentWrapper from "@/components/AdminLayout/ContentWrapper";
 
 export const Dashboard = () => {
   return (
     <ContentWrapper title="Dashboard">
       <p>Dashboard</p>
     </ContentWrapper>
-  )
-}
+  );
+};
