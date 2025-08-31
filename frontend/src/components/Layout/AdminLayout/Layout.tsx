@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SidebarComponent } from "@/components/Layout/AdminLayout/Sidebar/SidebarComponent";
 import TopBar from "./TopBar/TopBar";
 import { Spinner } from "@/components/Elements";
 import { Suspense } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useUser } from "@/lib/auth";
 
 const AdminLayout = () => {
   return (
@@ -20,8 +21,16 @@ const AdminLayout = () => {
 };
 
 const Layout = () => {
+  const user = useUser();
+  const navigate = useNavigate();
   const [toggled, setToggled] = React.useState(false);
   const [broken, setBroken] = React.useState(false);
+
+  useEffect(() => {
+    if (user && user.data && user.data.role !== "admin") {
+      navigate("/");
+    }
+  }, [user]);
 
   return (
     <div

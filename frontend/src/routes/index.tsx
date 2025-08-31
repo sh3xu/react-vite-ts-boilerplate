@@ -6,6 +6,8 @@ import { commonRoutes } from "./common";
 
 import { useUser } from "@/lib/auth";
 import Landing from "@/features/Landing";
+import { NotFound } from "@/components/NotFound";
+
 
 export const AppRoutes = () => {
   const user = useUser();
@@ -16,7 +18,12 @@ export const AppRoutes = () => {
   };
   const routes = user.data ? protectedRoutes : publicRoutes;
 
-  const element = useRoutes([intialRoute, ...routes, ...commonRoutes]);
+  const catchAllRoute = {
+    path: "*",
+    element: <NotFound />,
+  };
+
+  const element = useRoutes([intialRoute, ...routes, ...commonRoutes, catchAllRoute]);
 
   return <>{element}</>;
 };

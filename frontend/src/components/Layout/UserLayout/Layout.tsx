@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Spinner } from "@/components/Elements";
 import { Suspense } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import LandingLayout from "@/components/Layout/LandingLayout/Layout";
+import { useUser } from "@/lib/auth";
 
 const UserLayout = () => {
   return (
@@ -19,6 +20,15 @@ const UserLayout = () => {
 };
 
 const Layout = () => {
+  const user = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.data && user.data.role !== "user") {
+      navigate("/");
+    }
+  }, [user]);
+  
   return (
     <LandingLayout>
       <UserLayout />

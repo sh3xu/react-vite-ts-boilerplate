@@ -12,4 +12,8 @@ export const AdminRoutes = [
     path: "users",
     element: <Users />,
   },
+  {
+    path: "*",
+    element: <p>Not found</p>,
+  },
 ];
