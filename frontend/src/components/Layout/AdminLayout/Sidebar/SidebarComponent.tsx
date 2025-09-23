@@ -12,6 +12,10 @@ import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import dash from "@/assets/dash.svg";
+import user from "@/assets/users.svg";
+import analytic from "@/assets/analytic.svg";
+import center from "@/assets/center.svg";
+import admin from "@/assets/john.svg";
 const themes = {
   light: {
     sidebar: {
@@ -112,7 +116,6 @@ export const SidebarComponent = ({
       initial={{ opacity: 0, x: -100 }}
       animate={{ opacity: 1, x: 0 }}
     >
-      
       <Sidebar
         toggled={toggled}
         onBackdropClick={() => setToggled(false)}
@@ -124,7 +127,6 @@ export const SidebarComponent = ({
           color: themes.light.sidebar.color,
         }}
       >
-
         <div
           style={{
             display: "flex",
@@ -134,13 +136,13 @@ export const SidebarComponent = ({
         >
           <SidebarHeader style={{ marginBottom: "24px", marginTop: "16px" }} />
           <div className="sidebar-search">
-        <form className="side-search relative">
-          <input className="form-control" placeholder="Search" />
-          <button className="sidebar-btn">
-            <i className="fa fa-search" />
-          </button>
-        </form>
-      </div>
+            <form className="side-search relative">
+              <input className="form-control" placeholder="Search" />
+              <button className="sidebar-btn">
+                <i className="fa fa-search" />
+              </button>
+            </form>
+          </div>
           <div style={{ flex: 1, marginBottom: "32px" }}>
             <Menu menuItemStyles={menuItemStyles}>
               <MenuItem
@@ -155,12 +157,38 @@ export const SidebarComponent = ({
               <MenuItem
                 onClick={to("/admin/users")}
                 active={active === "users"}
-                icon={<i className="fa-solid fa-user"></i>}
+                icon={<img src={user} className="menu-icon" />}
               >
                 Users
               </MenuItem>
             </Menu>
             <Menu menuItemStyles={menuItemStyles}>
+              <MenuItem
+                onClick={to("/admin/users")}
+                active={active === "users"}
+                icon={<img src={analytic} className="menu-icon" />}
+              >
+                Analytics & Insights
+              </MenuItem>
+            </Menu>
+            <Menu menuItemStyles={menuItemStyles}>
+              <MenuItem
+                onClick={to("/admin/users")}
+                active={active === "users"}
+                icon={<img src={center} className="menu-icon" />}
+              >
+               Notification Center
+              </MenuItem>
+            </Menu>
+            <hr />
+            <div className="account-info px-3 d-flex gap-3 align-items-center">
+              <img src={admin} className="admin-account-icon" />
+              <div className="right-details">
+                <h6 className="font-medium f-14 mb-0 text-white">John Carter</h6>
+                <p className="mb-0 f-13 lighttxt">Account settings</p>
+              </div>
+            </div>
+            {/* <Menu menuItemStyles={menuItemStyles}>
               <SubMenu
                 label="Settings"
                 icon={<i className="fa-solid fa-gear"></i>}
@@ -169,7 +197,7 @@ export const SidebarComponent = ({
                 <MenuItem> Line charts</MenuItem>
                 <MenuItem> Bar charts</MenuItem>
               </SubMenu>
-            </Menu>
+            </Menu> */}
           </div>
         </div>
       </Sidebar>

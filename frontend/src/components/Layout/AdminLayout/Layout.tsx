@@ -45,7 +45,7 @@ const Layout = () => {
       />
       <main className="w-100 admin-main bgcolor">
         <TopBar toggled={toggled} setToggled={setToggled} broken={broken} />
-        <div style={{ height: "90vh", overflow: "auto" }}>
+        <div className="admin-main-content" style={{ height: "90vh", overflow: "auto" }}>
           <AdminLayout />
         </div>
       </main>

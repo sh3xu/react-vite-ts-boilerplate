@@ -65,7 +65,7 @@ export const Dashboard = () => {
         <div className="card-dash dashboard-col cardbg rounded-lg mb-4">
           <div className="row">
             <div className="col-12 col-md-7 p-0">
-              <div className="chart-cards  border-rght p-4 ">
+              <div className="chart-cards   p-4 ">
                 <p className="f-14 lighttxt">Total revenue</p>
                 <h3 className="mb-0 d-flex align-items-end gap-2 justify-content-start">
                   <span className="f-24 semi-bold text-white">23.6K </span>
@@ -77,7 +77,7 @@ export const Dashboard = () => {
               </div>
             </div>
             <div className="col-12 col-md-5 p-0">
-              <div className="border-btm">
+              <div className="border-btm border-lft">
                 <div className="chart-cards p-4   new-users">
                   <p className="f-14 lighttxt">Total New Users</p>
                   <h3 className="mb-0 d-flex align-items-end gap-2 justify-content-start">
@@ -89,7 +89,7 @@ export const Dashboard = () => {
                   <NewUsers />
                 </div>
               </div>
-              <div className="chart-cards p-4 new-users">
+              <div className="chart-cards p-4  border-lft new-users">
                 <p className="f-14 lighttxt">Total sessions</p>
                 <h3 className="mb-0 d-flex align-items-end gap-2 justify-content-start">
                   <span className="f-24 semi-bold text-white">23.6K </span>
