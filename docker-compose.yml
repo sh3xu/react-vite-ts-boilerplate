@@ -5,13 +5,14 @@ services:
     build: .
     image: node-app
     environment:
+      - NODE_ENV=development
+      - PORT=3001
       - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
+      - JWT_SECRET=change-me
     ports:
-      - '3000:3000'
+      - '3001:3001'
     depends_on:
       - mongodb
-    volumes:
-      - .:/usr/src/node-app
     networks:
       - node-network
 

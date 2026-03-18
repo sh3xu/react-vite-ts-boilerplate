@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Define Notification Schema
 const notificationSchema = new mongoose.Schema({
@@ -12,21 +12,21 @@ const notificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['email', 'push', 'sms'], 
+    enum: ["email", "push", "sms"],
     required: true,
   },
   status: {
     type: String,
-    enum: ['pending', 'sent', 'failed'],
-    default: 'sent',
+    enum: ["pending", "sent", "failed"],
+    default: "sent",
   },
   sentBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CustomerAttendent', 
+    ref: "CustomerAttendent",
   },
-  marked:{
-    type:Boolean,
-    default:false
+  marked: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,
@@ -34,9 +34,9 @@ const notificationSchema = new mongoose.Schema({
   },
   sentAt: {
     type: Date,
-  }
+  },
 });
 
-const Notification = mongoose.model('Notification', notificationSchema);
+const Notification = mongoose.model("Notification", notificationSchema);
 
 module.exports = Notification;

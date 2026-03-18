@@ -1,5 +1,5 @@
-const Joi = require('joi');
-const { password } = require('./custom.validation');
+const Joi = require("joi");
+const { password } = require("./custom.validation");
 
 const register = {
   body: Joi.object().keys({
@@ -55,7 +55,7 @@ const verifyotp = {
   body: Joi.object().keys({
     otp: Joi.string().required(), // OTP passed in body
   }),
-}
+};
 
 const createAttendents = {
   body: Joi.object().keys({
@@ -65,37 +65,37 @@ const createAttendents = {
     age: Joi.string().required(),
     phone: Joi.string().required(),
     tagId: Joi.string(),
-    status:Joi.string()
-  })
-}
+    status: Joi.string(),
+  }),
+};
 
 const resendOtp = {
-  body:Joi.object().keys({
-    emailToken:Joi.string().required()
-  })
-}
+  body: Joi.object().keys({
+    emailToken: Joi.string().required(),
+  }),
+};
 
 const editProfile = {
-  body:Joi.object().keys({
-    name:Joi.string(),
-    email:Joi.string(),
-    phone:Joi.string(),
-    image:Joi.string()
-  })
-}
+  body: Joi.object().keys({
+    name: Joi.string(),
+    email: Joi.string(),
+    phone: Joi.string(),
+    image: Joi.string(),
+  }),
+};
 
 const changePassword = {
-  body:Joi.object().keys({
-    oldPassword:Joi.string().required(),
-    newPassword:Joi.string().required()
-  })
-}
+  body: Joi.object().keys({
+    oldPassword: Joi.string().required(),
+    newPassword: Joi.string().required(),
+  }),
+};
 
 const loginWithQr = {
-  body:Joi.object().keys({
-    tagId:Joi.string().required()
-  })
-}
+  body: Joi.object().keys({
+    tagId: Joi.string().required(),
+  }),
+};
 
 module.exports = {
   register,
@@ -110,5 +110,5 @@ module.exports = {
   resendOtp,
   editProfile,
   changePassword,
-  loginWithQr
+  loginWithQr,
 };

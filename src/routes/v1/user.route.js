@@ -1,23 +1,23 @@
-const express = require('express');
-const auth = require('../../middlewares/auth');
-const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
-const upload = require("../../middlewares/multer")
+const express = require("express");
+const auth = require("../../middlewares/auth");
+const validate = require("../../middlewares/validate");
+const userValidation = require("../../validations/user.validation");
+const userController = require("../../controllers/user.controller");
+const _upload = require("../../middlewares/multer");
 const router = express.Router();
 
 router
-  .route('/')
-  .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
-  .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
+  .route("/")
+  .post(auth("manageUsers"), validate(userValidation.createUser), userController.createUser)
+  .get(auth("getUsers"), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:userId')
-  .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+  .route("/:userId")
+  .get(auth("getUsers"), validate(userValidation.getUser), userController.getUser)
+  .delete(auth("manageUsers"), validate(userValidation.deleteUser), userController.deleteUser);
 
-router.route("/password").post(auth(),validate(userValidation.changePassword),userController.changePassword)
-router.route("/edit").post(auth(), validate(userValidation.updateUser), userController.updateUser)
+router.route("/password").post(auth(), validate(userValidation.changePassword), userController.changePassword);
+router.route("/edit").post(auth(), validate(userValidation.updateUser), userController.updateUser);
 module.exports = router;
 
 /**

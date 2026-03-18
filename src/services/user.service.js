@@ -1,7 +1,7 @@
-const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
-const moment = require('moment');
-const { User } = require('../models/user.model');
+const httpStatus = require("http-status");
+const ApiError = require("../utils/ApiError");
+const moment = require("moment");
+const { User } = require("../models/user.model");
 
 /**
  * Create a user
@@ -10,7 +10,7 @@ const { User } = require('../models/user.model');
  */
 const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
   return User.create(userBody);
 };
@@ -35,7 +35,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id, model) => {
-  return model.findById(id)
+  return model.findById(id);
 };
 
 /**
@@ -55,10 +55,10 @@ const getUserByEmail = async (email, model) => {
 const updateUserById = async (userId, updateBody, model) => {
   const user = await getUserById(userId, model);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
   if (updateBody.email && (await model.isEmailTaken(updateBody.email, userId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -73,17 +73,17 @@ const updateUserById = async (userId, updateBody, model) => {
 const deleteUserById = async (userId) => {
   const user = await getUserById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
   await user.remove();
   return user;
 };
-const storeOtp = async (userId, otp, model) => {
+const storeOtp = async (userId, otp, otpExpiresAt, model) => {
   const user = await model.findByIdAndUpdate(userId, {
-    $set: { otp: otp }
-  })
-  return user
-}
+    $set: { otp, otpExpiresAt },
+  });
+  return user;
+};
 const checkOtp = async (userId, otp, model) => {
   const user = await getUserById(userId, model);
 
@@ -92,28 +92,23 @@ const checkOtp = async (userId, otp, model) => {
   }
 
   const storedOtp = user.otp;
-  const otpExpiration = user.otpExpiration;
+  const otpExpiresAt = user.otpExpiresAt;
   if (!storedOtp) {
     throw new ApiError(httpStatus.BAD_REQUEST, "No OTP found for this user");
   }
 
   const currentTime = moment();
-  if (currentTime.isAfter(otpExpiration)) {
+  if (!otpExpiresAt || currentTime.isAfter(otpExpiresAt)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "OTP has expired");
   }
 
   if (storedOtp !== otp) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid OTP");
   }
-  await model.updateOne(
-    { _id: userId },
-    { $unset: { otp: "" } }
-  );
+  await model.updateOne({ _id: userId }, { $unset: { otp: "", otpExpiresAt: "" } });
 
   return { success: true, message: "OTP verified successfully" };
 };
-
-
 
 module.exports = {
   createUser,

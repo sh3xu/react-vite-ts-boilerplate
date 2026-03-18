@@ -25,3 +25,13 @@ dist-ssr
 
 dist
 config.bat
+
+.env
+
+# remove ai generated files
+.kilo/*
+.anthropic/*
+.claude/*
+.gemini/*
+.cursor/*
+.qwen/*

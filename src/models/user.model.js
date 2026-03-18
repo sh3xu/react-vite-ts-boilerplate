@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const { paginate } = require('./plugins');
-const { roles } = require('../config/roles');
+const mongoose = require("mongoose");
+const argon2 = require("argon2");
+const validator = require("validator");
+const { paginate, toJSON } = require("./plugins");
+const { roles } = require("../config/roles");
 
 const userSchema = mongoose.Schema(
   {
@@ -17,7 +18,7 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       validate(value) {
         if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
+          throw new Error("Invalid email");
         }
       },
     },
@@ -28,21 +29,21 @@ const userSchema = mongoose.Schema(
       minlength: 8,
       validate(value) {
         if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-          throw new Error('Password must contain at least one letter and one number');
+          throw new Error("Password must contain at least one letter and one number");
         }
       },
       private: true, // used by the toJSON plugin
     },
     firstName: {
-      type: String
+      type: String,
     },
     lastName: {
-      type: String
+      type: String,
     },
     role: {
       type: String,
       enum: roles,
-      default: 'user',
+      default: "user",
     },
     isEmailVerified: {
       type: Boolean,
@@ -51,9 +52,12 @@ const userSchema = mongoose.Schema(
     otp: {
       type: String,
     },
+    otpExpiresAt: {
+      type: Date,
+    },
     image: {
       type: String,
-      default: null
+      default: null,
     },
     phone: {
       type: String,
@@ -61,10 +65,10 @@ const userSchema = mongoose.Schema(
       // match: [/^\+(\d{1,4})\d{4,10}$/, 'Please enter a valid phone number'],
     },
   },
-  { timestamps: true, }
+  { timestamps: true }
 );
 
-// userSchema.plugin(toJSON);
+userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
 /**
@@ -74,19 +78,17 @@ userSchema.plugin(paginate);
  * @returns {Promise<boolean>}
  */
 /**
-* Check if email is taken (excluding empty emails)
-* @param {string} email - The user's email
-* @param {ObjectId} [excludeUserId] - The id of the user to be excluded
-* @returns {Promise<boolean>}
-*/
+ * Check if email is taken (excluding empty emails)
+ * @param {string} email - The user's email
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   if (!email) {
     return false;
   }
   const user = await this.findOne({
-    email: { $ne: null, $ne: '' },
-    email,
-    _id: { $ne: excludeUserId },
+    $and: [{ email }, { email: { $nin: [null, ""] } }, { _id: { $ne: excludeUserId } }],
   });
   return !!user;
 };
@@ -97,30 +99,25 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
  * @returns {Promise<boolean>}
  */
 userSchema.methods.isPasswordMatch = async function (password) {
-  const user = this;
-  return bcrypt.compare(password, user.password);
+  return argon2.verify(this.password, password);
 };
 
-userSchema.pre('save', async function (next) {
-  const user = this;
-
+userSchema.pre("save", async function (next) {
   // If email is provided, check if it's valid
-  // if (user.email && !validator.isEmail(user.email)) {
+  // if (this.email && !validator.isEmail(this.email)) {
   //   return next(new Error('Invalid email format.'));
   // }
 
-  if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
+  if (this.isModified("password")) {
+    this.password = await argon2.hash(this.password, { type: argon2.argon2id });
   }
 
   next();
 });
 
-
 /**
  * @typedef User
  */
-const User = mongoose.model('User', userSchema);
-
+const User = mongoose.model("User", userSchema);
 
 module.exports = { User };

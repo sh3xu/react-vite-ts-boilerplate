@@ -1,13 +1,15 @@
-const nodemailer = require('nodemailer');
-const config = require('../config/config');
-const logger = require('../config/logger');
+const nodemailer = require("nodemailer");
+const config = require("../config/config");
+const logger = require("../config/logger");
 
 const transport = nodemailer.createTransport(config.email.smtp);
-if (config.env !== 'test') {
+if (config.env !== "test") {
   transport
     .verify()
-    .then(() => logger.info('Connected to email server'))
-    .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
+    .then(() => logger.info("Connected to email server"))
+    .catch(() =>
+      logger.warn("Unable to connect to email server. Make sure you have configured the SMTP options in .env")
+    );
 }
 
 /**
@@ -29,25 +31,24 @@ const sendEmail = async (to, subject, text) => {
  * @returns {Promise}
  */
 const sendResetPasswordEmail = async (to, token) => {
-  const subject = 'Reset password';
-  const resetPasswordUrl = `http://link-to-app/reset-password?token=${token.resetPasswordToken}`;
+  const subject = "Reset password";
+  const _resetPasswordUrl = `http://link-to-app/reset-password?token=${token.resetPasswordToken}`;
   const text = `Dear user,
 To reset your password, Here is your otp: ${token.otp}
 If you did not request any password resets, then ignore this email.`;
   await sendEmail(to, subject, text);
-  console.log()
+  console.log();
 };
 
 const sendAccountConfirmationEmail = async (to, email, password) => {
-  const subject = 'Account Creation';
+  const subject = "Account Creation";
   const text = `Dear user,
 Your account has been created by admin 
 Here is your credentials,
-Email :${email} , Password: ${password} `
+Email :${email} , Password: ${password} `;
   await sendEmail(to, subject, text);
-  console.log()
+  console.log();
 };
-
 
 /**
  * Send verification email
@@ -56,7 +57,7 @@ Email :${email} , Password: ${password} `
  * @returns {Promise}
  */
 const sendVerificationEmail = async (to, token) => {
-  const subject = 'Email Verification';
+  const subject = "Email Verification";
   // replace this url with the link to the email verification page of your front-end app
   const verificationEmailUrl = `http://link-to-app/verify-email?token=${token}`;
   const text = `Dear user,
@@ -70,5 +71,5 @@ module.exports = {
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
-  sendAccountConfirmationEmail
+  sendAccountConfirmationEmail,
 };

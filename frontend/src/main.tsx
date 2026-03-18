@@ -1,30 +1,18 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { queryClient } from "@/lib/api/queryClient";
 import App from "./App.tsx";
 import "./index.css";
-import "bootstrap/dist/css/bootstrap.css";
-import "./scss/custom.scss";
-import "flatpickr/dist/themes/material_green.css";
-import { colors } from "./components/config.ts";
 
-const theme = createTheme({
-  typography: {
-    fontFamily: "Montserrat",
-  },
-  palette: {
-    primary: {
-      main: colors.primary,
-    },
-    secondary: {
-      main: colors.secondary,
-    },
-  },
-});
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Root element not found");
+createRoot(rootElement).render(
+  <StrictMode>
+    <QueryClientProvider client={queryClient}>
       <App />
-    </ThemeProvider>
-  </React.StrictMode>
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+    </QueryClientProvider>
+  </StrictMode>
 );

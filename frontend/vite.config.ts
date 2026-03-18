@@ -1,22 +1,29 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import path from 'path'
+import path from "node:path";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from "vite";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve('./src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
-    proxy: {
-      '/v1': {
-        target: 'http://localhost:6666',
-        changeOrigin: true,
-        secure: false,
+    port: 5173,
+    open: true,
+  },
+  build: {
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          query: ["@tanstack/react-query"],
+          ui: ["framer-motion", "lucide-react"],
+        },
       },
     },
   },
-})
+});

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!**/coverage",
+      "!**/.next",
+      "!**/storybook-static",
+      "!**/.turbo",
+      "!**/.vite"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120,
+    "lineEnding": "crlf"
+  },
+  "assist": { "actions": { "source": { "organizeImports": "off" } } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "useConst": "error",
+        "useTemplate": "warn"
+      }
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.css"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["frontend/src/components/ui/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off"
+          },
+          "security": {
+            "noDangerouslySetInnerHtml": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["jest.config.js"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noInnerDeclarations": "off"
+          },
+          "suspicious": {
+            "noRedeclare": "off",
+            "noTemplateCurlyInString": "off"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,8 +1,52 @@
-# RESTful API Node Server Boilerplate
+# React TypeScript + Node API Template
 
-[![Build Status](https://travis-ci.org/hagopj13/node-express-boilerplate.svg?branch=master)](https://travis-ci.org/hagopj13/node-express-boilerplate)
-[![Coverage Status](https://coveralls.io/repos/github/hagopj13/node-express-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/hagopj13/node-express-boilerplate?branch=master)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+Single repository with:
+
+- `frontend/`: React + TypeScript app (Vite, shadcn/ui, Tailwind, TanStack Query, Zod)
+- `src/`: Node.js + Express REST API (MongoDB)
+
+In production, the backend serves the built frontend SPA and exposes the API under `/v1`.
+
+## Local development
+
+Install:
+
+```bash
+pnpm install
+pnpm -C frontend install
+```
+
+Run backend (API on `http://localhost:3001`):
+
+```bash
+pnpm dev
+```
+
+Run frontend (Vite on `http://localhost:5173`):
+
+```bash
+pnpm -C frontend dev
+```
+
+## Docker (single command)
+
+Builds frontend, runs backend + MongoDB:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+- Frontend: `http://localhost:3001`
+- API: `http://localhost:3001/v1`
+- API docs: `http://localhost:3001/v1/docs`
+
+## Git hooks
+
+Husky runs `lint-staged` on pre-commit to keep backend + frontend changes consistent.
+
+# RESTful API Node Server Boilerplate
 
 A boilerplate/starter project for quickly building RESTful APIs using Node.js, Express, and Mongoose.
 
@@ -150,7 +194,7 @@ The environment variables can be found and modified in the `.env` file. They com
 
 ```bash
 # Port number
-PORT=3000
+PORT=3001
 
 # URL of the Mongo DB
 MONGODB_URL=mongodb://127.0.0.1:27017/node-boilerplate
@@ -191,7 +235,7 @@ src\
 
 ## API Documentation
 
-To view the list of available APIs and their specifications, run the server and go to `http://localhost:3000/v1/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
+To view the list of available APIs and their specifications, run the server and go to `http://localhost:3001/v1/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
 
 ### API Endpoints
 
@@ -433,7 +477,6 @@ Contributions are more than welcome! Please check out the [contributing guide](C
 
 - [danielfsousa/express-rest-es2017-boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate)
 - [madhums/node-express-mongoose](https://github.com/madhums/node-express-mongoose)
-- [kunalkapadia/express-mongoose-es6-rest-api](https://github.com/kunalkapadia/express-mongoose-es6-rest-api)
 
 ## License
 

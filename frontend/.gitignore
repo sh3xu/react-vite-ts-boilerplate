@@ -23,4 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
-dist
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Biome
+.biome/
