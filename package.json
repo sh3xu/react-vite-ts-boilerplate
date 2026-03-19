@@ -5,7 +5,8 @@
   "packageManager": "pnpm@10.26.1",
   "bin": "bin/createNodejsApp.js",
   "main": "src/index.js",
-  "repository": "https://github.com/shobhitk8055/react-vite-ts-boilerplate.git",
+  "repository": "https://github.com/sh3xu/react-vite-ts-boilerplate.git",
+  "author": "sh3xu",
   "license": "MIT",
   "engines": {
     "node": ">=12.0.0"
