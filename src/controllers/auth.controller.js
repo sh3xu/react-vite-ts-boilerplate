@@ -3,7 +3,6 @@ const catchAsync = require("../utils/catchAsync");
 const { authService, userService, tokenService, emailService } = require("../services");
 const { getUserById, checkOtp } = require("../services/user.service");
 const { tokenTypes } = require("../config/tokens");
-const { generateEmailToken } = require("../services/auth.service");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/user.model");
 
@@ -32,16 +31,8 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email, User);
-  const emailToken = await generateEmailToken(req.body.email, User);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  res.status(200).send({
-    success: true,
-    data: {
-      resetToken: resetPasswordToken.resetPasswordToken,
-      emailToken,
-      message: "Otp Sent",
-    },
-  });
+  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken.resetPasswordToken);
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 const resendOtp = catchAsync(async (req, res) => {
@@ -69,9 +60,9 @@ const verifyOtp = catchAsync(async (req, res) => {
 });
 
 const resetPassword = catchAsync(async (req, res) => {
-  const data = await authService.resetPassword(req.params.token, req.body.password, User);
+  const data = await authService.resetPassword(req.query.token, req.body.password, User);
   if (data?.message) return res.status(httpStatus.BAD_REQUEST).send({ message: data.message });
-  res.status(httpStatus.OK).send({ success: true, message: "Password Reset Successfully" });
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {

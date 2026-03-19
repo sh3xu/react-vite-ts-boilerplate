@@ -34,7 +34,7 @@ const queryUsers = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
-const getUserById = async (id, model) => {
+const getUserById = async (id, model = User) => {
   return model.findById(id);
 };
 
@@ -43,7 +43,7 @@ const getUserById = async (id, model) => {
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email, model) => {
+const getUserByEmail = async (email, model = User) => {
   return model.findOne({ email });
 };
 /**
@@ -71,11 +71,11 @@ const updateUserById = async (userId, updateBody, model) => {
  * @returns {Promise<User>}
  */
 const deleteUserById = async (userId) => {
-  const user = await getUserById(userId);
+  const user = await getUserById(userId, User);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
-  await user.remove();
+  await user.deleteOne();
   return user;
 };
 const storeOtp = async (userId, otp, otpExpiresAt, model) => {

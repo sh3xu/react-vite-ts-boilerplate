@@ -2,51 +2,67 @@ const Joi = require("joi");
 const { password } = require("./custom.validation");
 
 const register = {
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
-  }),
+  body: Joi.object()
+    .keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().custom(password),
+      name: Joi.string().required(),
+    })
+    .required(),
 };
 
 const login = {
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
-  }),
+  body: Joi.object()
+    .keys({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    })
+    .required(),
 };
 
 const logout = {
-  body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
-  }),
+  body: Joi.object()
+    .keys({
+      refreshToken: Joi.string().required(),
+    })
+    .required(),
 };
 
 const refreshTokens = {
-  body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
-  }),
+  body: Joi.object()
+    .keys({
+      refreshToken: Joi.string().required(),
+    })
+    .required(),
 };
 
 const forgotPassword = {
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
-  }),
+  body: Joi.object()
+    .keys({
+      email: Joi.string().email().required(),
+    })
+    .required(),
 };
 
 const resetPassword = {
-  params: Joi.object().keys({
-    token: Joi.string().required(),
-  }),
-  body: Joi.object().keys({
-    password: Joi.string().required().custom(password),
-  }),
+  query: Joi.object()
+    .keys({
+      token: Joi.string().required(),
+    })
+    .required(),
+  body: Joi.object()
+    .keys({
+      password: Joi.string().required().custom(password),
+    })
+    .required(),
 };
 
 const verifyEmail = {
-  query: Joi.object().keys({
-    token: Joi.string().required(),
-  }),
+  query: Joi.object()
+    .keys({
+      token: Joi.string().required(),
+    })
+    .required(),
 };
 const verifyotp = {
   params: Joi.object().keys({

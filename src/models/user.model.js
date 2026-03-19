@@ -65,7 +65,17 @@ const userSchema = mongoose.Schema(
       // match: [/^\+(\d{1,4})\d{4,10}$/, 'Please enter a valid phone number'],
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform(_doc, ret) {
+        if (ret.image === null || ret.image === undefined) {
+          delete ret.image;
+        }
+        return ret;
+      },
+    },
+  }
 );
 
 userSchema.plugin(toJSON);
@@ -102,7 +112,7 @@ userSchema.methods.isPasswordMatch = async function (password) {
   return argon2.verify(this.password, password);
 };
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   // If email is provided, check if it's valid
   // if (this.email && !validator.isEmail(this.email)) {
   //   return next(new Error('Invalid email format.'));
@@ -111,8 +121,6 @@ userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await argon2.hash(this.password, { type: argon2.argon2id });
   }
-
-  next();
 });
 
 /**

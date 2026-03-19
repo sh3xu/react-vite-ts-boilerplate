@@ -15,7 +15,7 @@ const argon2 = require("argon2");
 const loginUserWithEmailAndPassword = async (email, password, model) => {
   const user = await userService.getUserByEmail(email, model);
   if (!user || !(await user.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Incorrect email or password");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
   }
   return user;
 };
@@ -30,7 +30,7 @@ const logout = async (refreshToken) => {
   if (!refreshTokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, "Not found");
   }
-  await refreshTokenDoc.remove();
+  await refreshTokenDoc.deleteOne();
 };
 
 /**
@@ -45,10 +45,10 @@ const refreshAuth = async (refreshToken) => {
     if (!user) {
       throw new Error();
     }
-    await refreshTokenDoc.remove();
+    await refreshTokenDoc.deleteOne();
     return tokenService.generateAuthTokens(user);
   } catch (_error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Please authenticate");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
   }
 };
 
@@ -72,7 +72,7 @@ const resetPassword = async (resetPasswordToken, newPassword, model) => {
     await userService.updateUserById(user.id, { password: newPassword }, model);
     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
   } catch (_error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Password reset failed");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
   }
 };
 
@@ -89,9 +89,9 @@ const verifyEmail = async (verifyEmailToken, model) => {
       throw new Error();
     }
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
-    await userService.updateUserById(user.id, { isEmailVerified: true });
+    await userService.updateUserById(user.id, { isEmailVerified: true }, model);
   } catch (_error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email verification failed");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
   }
 };
 const generateEmailToken = async (email, model) => {
