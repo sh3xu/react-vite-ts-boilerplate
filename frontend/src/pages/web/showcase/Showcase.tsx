@@ -280,10 +280,10 @@ function FormsSection() {
 
 function AvatarsSection() {
   const people = [
-    { name: "Alice Chen", src: "https://i.pravatar.cc/150?img=1" },
-    { name: "Bob Smith", src: "https://i.pravatar.cc/150?img=2" },
-    { name: "Carol Jones", src: "https://i.pravatar.cc/150?img=3" },
-    { name: "David Park", src: undefined },
+    { id: "alice-chen", name: "Alice Chen", src: "https://i.pravatar.cc/150?img=1" },
+    { id: "bob-smith", name: "Bob Smith", src: "https://i.pravatar.cc/150?img=2" },
+    { id: "carol-jones", name: "Carol Jones", src: "https://i.pravatar.cc/150?img=3" },
+    { id: "david-park", name: "David Park", src: undefined },
   ];
 
   return (
@@ -308,7 +308,7 @@ function AvatarsSection() {
       <SectionBlock title="Fallback" description="When no image is available, initials are shown.">
         <div className="flex items-center gap-4">
           {people.map((person) => (
-            <AppAvatar key={person.name} name={person.name} src={person.src} />
+            <AppAvatar key={person.id} name={person.name} src={person.src} />
           ))}
         </div>
       </SectionBlock>

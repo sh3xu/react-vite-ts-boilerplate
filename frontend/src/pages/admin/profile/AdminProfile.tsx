@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { UserIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -9,8 +8,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminProfile() {
   const { user } = useAuth();
-  const [name, setName] = useState(user?.name ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
+  const name = user?.name ?? "";
+  const email = user?.email ?? "";
 
   const getInitials = (n: string) =>
     n
@@ -62,22 +61,11 @@ export default function AdminProfile() {
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="admin-profile-name">Full Name</FieldLabel>
-                  <Input
-                    id="admin-profile-name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Your name"
-                  />
+                  <Input id="admin-profile-name" value={name} readOnly placeholder="Your name" />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="admin-profile-email">Email Address</FieldLabel>
-                  <Input
-                    id="admin-profile-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                  />
+                  <Input id="admin-profile-email" type="email" value={email} readOnly placeholder="your@email.com" />
                 </Field>
               </FieldGroup>
               <Button type="submit">Save Changes</Button>

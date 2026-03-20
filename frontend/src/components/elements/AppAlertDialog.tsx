@@ -17,6 +17,7 @@ type AppAlertDialogProps = {
   title: string;
   description: ReactNode;
   icon?: ReactNode;
+  onConfirm?: () => void;
   cancelText?: string;
   confirmText?: string;
   confirmVariant?: "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
@@ -28,6 +29,7 @@ export function AppAlertDialog({
   title,
   description,
   icon,
+  onConfirm,
   cancelText = "Cancel",
   confirmText = "Confirm",
   confirmVariant = "default",
@@ -44,7 +46,9 @@ export function AppAlertDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction variant={confirmVariant}>{confirmText}</AlertDialogAction>
+          <AlertDialogAction variant={confirmVariant} onClick={onConfirm}>
+            {confirmText}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

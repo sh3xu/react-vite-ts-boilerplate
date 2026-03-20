@@ -37,7 +37,7 @@ export function AppAvatar({ name, src, alt, size = "default", badgeClassName }: 
 }
 
 export type AppAvatarGroupProps = {
-  people: Array<{ name: string; src?: string }>;
+  people: Array<{ id: string; name: string; src?: string }>;
   overflowCount?: number;
   size?: AvatarSize;
 };
@@ -46,7 +46,7 @@ export function AppAvatarGroup({ people, overflowCount = 0, size = "default" }: 
   return (
     <AvatarGroup>
       {people.map((person) => (
-        <AppAvatar key={person.name} name={person.name} src={person.src} size={size} />
+        <AppAvatar key={person.id} name={person.name} src={person.src} size={size} />
       ))}
       {overflowCount > 0 && <AvatarGroupCount>+{overflowCount}</AvatarGroupCount>}
     </AvatarGroup>

@@ -1,4 +1,5 @@
 const httpStatus = require("http-status");
+const config = require("../config/config");
 const catchAsync = require("../utils/catchAsync");
 const { authService, userService, tokenService, emailService } = require("../services");
 const { getUserById, checkOtp } = require("../services/user.service");
@@ -32,7 +33,17 @@ const refreshTokens = catchAsync(async (req, res) => {
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email, User);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken.resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  const emailToken = jwt.sign({ email: req.body.email }, config.jwt.secret, {
+    expiresIn: `${config.jwt.resetPasswordExpirationMinutes}m`,
+  });
+  res.status(httpStatus.OK).send({
+    success: true,
+    data: {
+      resetToken: resetPasswordToken.resetPasswordToken,
+      emailToken,
+      message: "OTP sent",
+    },
+  });
 });
 
 const resendOtp = catchAsync(async (req, res) => {
@@ -43,7 +54,7 @@ const resendOtp = catchAsync(async (req, res) => {
   const decoded = jwt.verify(emailToken, process.env.JWT_SECRET);
   const resetPasswordToken = await tokenService.generateResetPasswordToken(decoded.email, User);
 
-  await emailService.sendResetPasswordEmail(decoded.email, resetPasswordToken);
+  await emailService.sendResetPasswordEmail(decoded.email, resetPasswordToken.resetPasswordToken);
 
   res.status(200).send({ success: true, data: resetPasswordToken.resetPasswordToken, message: "Otp Sent" });
 });
