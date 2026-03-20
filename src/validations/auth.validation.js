@@ -65,10 +65,8 @@ const verifyEmail = {
     .required(),
 };
 const verifyotp = {
-  params: Joi.object().keys({
-    token: Joi.string().required(), // Token passed in URL
-  }),
   body: Joi.object().keys({
+    emailToken: Joi.string().required(),
     otp: Joi.string().required(), // OTP passed in body
   }),
 };

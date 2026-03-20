@@ -16,7 +16,6 @@ type AuthResponse = {
 type ForgotPasswordResponse = {
   success: true;
   data: {
-    resetToken: string;
     emailToken: string;
     message?: string;
   };
@@ -47,15 +46,19 @@ const authApi = {
     return data;
   },
 
-  verifyOtp: async (params: { token: string; otp: string }) => {
-    const { data } = await apiClient.post<{ success: true; message: string }>(`/v1/auth/verify-otp/${params.token}`, {
-      otp: params.otp,
-    });
+  verifyOtp: async (params: { emailToken: string; otp: string }) => {
+    const { data } = await apiClient.post<{ success: true; resetToken: string; message: string }>(
+      `/v1/auth/verify-otp`,
+      {
+        emailToken: params.emailToken,
+        otp: params.otp,
+      }
+    );
     return data;
   },
 
   resendOtp: async (emailToken: string) => {
-    const { data } = await apiClient.post<{ success: true; data: string; message?: string }>("/v1/auth/resend-otp", {
+    const { data } = await apiClient.post<{ success: true; message?: string }>("/v1/auth/resend-otp", {
       emailToken,
     });
     return data;
@@ -128,7 +131,7 @@ export const useForgotPassword = () => {
 
 export const useVerifyOtp = () => {
   return useMutation({
-    mutationFn: (params: { token: string; otp: string }) => authApi.verifyOtp(params),
+    mutationFn: (params: { emailToken: string; otp: string }) => authApi.verifyOtp(params),
   });
 };
 

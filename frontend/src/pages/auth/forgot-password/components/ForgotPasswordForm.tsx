@@ -39,7 +39,7 @@ export function ForgotPasswordForm() {
           title: "OTP Sent",
           description: "Check your email for the OTP.",
         });
-        navigate(`/otp-verify/${res.data.resetToken}?emailToken=${encodeURIComponent(res.data.emailToken)}`);
+        navigate(`/otp-verify?emailToken=${encodeURIComponent(res.data.emailToken)}`);
       },
       onError: (error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : "Failed to send OTP";

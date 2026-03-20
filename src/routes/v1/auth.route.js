@@ -15,7 +15,7 @@ router.post("/reset-password", validate(authValidation.resetPassword), authContr
 router.post("/send-verification-email", auth(), authController.sendVerificationEmail);
 router.post("/verify-email", validate(authValidation.verifyEmail), authController.verifyEmail);
 router.get("/me", auth(), authController.authMe);
-router.post("/verify-otp/:token", validate(authValidation.verifyotp), authController.verifyOtp);
+router.post("/verify-otp", validate(authValidation.verifyotp), authController.verifyOtp);
 router.post("/resend-otp", validate(authValidation.resendOtp), authController.resendOtp);
 module.exports = router;
 

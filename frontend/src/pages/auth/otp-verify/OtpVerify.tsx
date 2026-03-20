@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,6 @@ type OtpFormValues = z.infer<typeof otpSchema>;
 export default function OtpVerify() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { token } = useParams<{ token: string }>();
   const [searchParams] = useSearchParams();
   const emailToken = searchParams.get("emailToken") || "";
 
@@ -38,24 +37,24 @@ export default function OtpVerify() {
   const otpValue = watch("otp");
 
   const onSubmit = (data: OtpFormValues) => {
-    if (!token) {
+    if (!emailToken) {
       toast({
         variant: "error",
         title: "Invalid link",
-        description: "Missing reset token.",
+        description: "Missing email token.",
       });
       return;
     }
 
     verifyOtp(
-      { token, otp: data.otp },
+      { emailToken, otp: data.otp },
       {
-        onSuccess: () => {
+        onSuccess: (res) => {
           toast({
             title: "OTP Verified",
             description: "You can now reset your password.",
           });
-          navigate(`/reset-password/${token}`);
+          navigate(`/reset-password/${res.resetToken}`);
         },
         onError: (error: unknown) => {
           const errorMessage = error instanceof Error ? error.message : "Failed to verify OTP";
@@ -80,15 +79,11 @@ export default function OtpVerify() {
     }
 
     resendOtp(emailToken, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         toast({
           title: "OTP Sent",
           description: "Check your email for the new OTP.",
         });
-        const nextToken = res.data || token;
-        if (nextToken && nextToken !== token) {
-          navigate(`/otp-verify/${nextToken}?emailToken=${encodeURIComponent(emailToken)}`);
-        }
       },
       onError: (error: unknown) => {
         const errorMessage = error instanceof Error ? error.message : "Failed to resend OTP";

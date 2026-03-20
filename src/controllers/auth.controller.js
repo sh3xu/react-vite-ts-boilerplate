@@ -1,5 +1,6 @@
 const httpStatus = require("http-status");
 const config = require("../config/config");
+const moment = require("moment");
 const catchAsync = require("../utils/catchAsync");
 const { authService, userService, tokenService, emailService } = require("../services");
 const { getUserById, checkOtp } = require("../services/user.service");
@@ -39,7 +40,6 @@ const forgotPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({
     success: true,
     data: {
-      resetToken: resetPasswordToken.resetPasswordToken,
       emailToken,
       message: "OTP sent",
     },
@@ -51,23 +51,26 @@ const resendOtp = catchAsync(async (req, res) => {
   if (!emailToken) {
     return res.status(400).json({ success: false, message: "Email is required" });
   }
-  const decoded = jwt.verify(emailToken, process.env.JWT_SECRET);
+  const decoded = jwt.verify(emailToken, config.jwt.secret);
   const resetPasswordToken = await tokenService.generateResetPasswordToken(decoded.email, User);
 
   await emailService.sendResetPasswordEmail(decoded.email, resetPasswordToken.resetPasswordToken);
 
-  res.status(200).send({ success: true, data: resetPasswordToken.resetPasswordToken, message: "Otp Sent" });
+  res.status(200).send({ success: true, message: "Otp Sent" });
 });
 
 const verifyOtp = catchAsync(async (req, res) => {
-  const { otp } = req.body;
-  const resetPasswordTokenDoc = await tokenService.verifyToken(req.params.token, tokenTypes.RESET_PASSWORD);
-  const user = await userService.getUserById(resetPasswordTokenDoc.user, User);
+  const { otp, emailToken } = req.body;
+  const decoded = jwt.verify(emailToken, config.jwt.secret);
+  const user = await userService.getUserByEmail(decoded.email, User);
   if (!user) {
     throw new Error();
   }
-  const validOtp = await checkOtp(user._id, otp, User);
-  res.status(200).send(validOtp);
+  await checkOtp(user._id, otp, User);
+  const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, "minutes");
+  const resetToken = tokenService.generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
+  await tokenService.saveToken(resetToken, user.id, expires, tokenTypes.RESET_PASSWORD);
+  res.status(200).send({ success: true, resetToken, message: "OTP verified successfully" });
 });
 
 const resetPassword = catchAsync(async (req, res) => {

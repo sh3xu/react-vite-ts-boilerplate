@@ -1,6 +1,5 @@
 import { UserIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -48,16 +47,10 @@ export default function AdminProfile() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Account Information</CardTitle>
-            <CardDescription>Update your name and email address.</CardDescription>
+            <CardDescription>Your account details.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form
-              className="space-y-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                // TODO: wire up to update user mutation
-              }}
-            >
+            <div className="space-y-4">
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="admin-profile-name">Full Name</FieldLabel>
@@ -68,8 +61,7 @@ export default function AdminProfile() {
                   <Input id="admin-profile-email" type="email" value={email} readOnly placeholder="your@email.com" />
                 </Field>
               </FieldGroup>
-              <Button type="submit">Save Changes</Button>
-            </form>
+            </div>
           </CardContent>
         </Card>
       </div>
