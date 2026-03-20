@@ -72,7 +72,7 @@ const resetPassword = async (resetPasswordToken, newPassword, model) => {
     await userService.updateUserById(user.id, { password: newPassword }, model);
     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
   } catch (_error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
+    throw new ApiError(httpStatus.BAD_REQUEST, "Password reset failed");
   }
 };
 
