@@ -91,7 +91,7 @@ const verifyEmail = async (verifyEmailToken, model) => {
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true }, model);
   } catch (_error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email verification failed");
   }
 };
 const generateEmailToken = async (email, model) => {
