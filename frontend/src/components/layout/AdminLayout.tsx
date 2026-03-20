@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Outlet } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/uiStore";
 import { Footer } from "./Footer";
@@ -6,7 +7,7 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 
 interface AdminLayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export function AdminLayout({ children }: AdminLayoutProps) {
@@ -33,7 +34,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             !sidebarOpen && "lg:ml-64"
           )}
         >
-          <div className="w-full max-w-full overflow-x-hidden">{children}</div>
+          <div className="w-full max-w-full overflow-x-hidden">{children ?? <Outlet />}</div>
         </main>
       </div>
       <Footer />

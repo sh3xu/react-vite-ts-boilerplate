@@ -14,7 +14,7 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { type Column, DataTable } from "@/components/custom/data-table";
+import { type Column, DataTable } from "@/components/elements";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

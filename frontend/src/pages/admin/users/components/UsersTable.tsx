@@ -1,8 +1,18 @@
 import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ConfirmDialog } from "@/components/custom/confirm-dialog";
-import { type Column, DataTable } from "@/components/custom/data-table";
+import { type Column, DataTable } from "@/components/elements";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -151,18 +161,27 @@ export function UsersTable() {
         countLabel={(start, end, total) => `Showing ${start} to ${end} of ${total} users`}
       />
       {userToDelete && (
-        <ConfirmDialog
-          open={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
-          title="Delete User"
-          description={`This will permanently delete ${userToDelete.name} from the system. This action cannot be undone.`}
-          onConfirm={() => handleDelete(userToDelete.id, userToDelete.name)}
-          confirmText="Delete"
-          cancelText="Cancel"
-          variant="destructive"
-          icon={<Trash2 className="h-4 w-4 text-destructive" />}
-          iconClassName="size-12"
-        />
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent size="default">
+            <AlertDialogHeader>
+              <AlertDialogMedia className="size-12">
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </AlertDialogMedia>
+              <AlertDialogTitle>Delete User</AlertDialogTitle>
+              <AlertDialogDescription>
+                {`This will permanently delete ${userToDelete.name} from the system. This action cannot be undone.`}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction variant="destructive" onClick={() => handleDelete(userToDelete.id, userToDelete.name)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </>
   );

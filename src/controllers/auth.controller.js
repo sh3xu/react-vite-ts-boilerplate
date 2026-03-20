@@ -1,9 +1,10 @@
 const httpStatus = require("http-status");
+const config = require("../config/config");
+const moment = require("moment");
 const catchAsync = require("../utils/catchAsync");
 const { authService, userService, tokenService, emailService } = require("../services");
 const { getUserById, checkOtp } = require("../services/user.service");
 const { tokenTypes } = require("../config/tokens");
-const { generateEmailToken } = require("../services/auth.service");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/user.model");
 
@@ -32,14 +33,15 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email, User);
-  const emailToken = await generateEmailToken(req.body.email, User);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  res.status(200).send({
+  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken.resetPasswordToken);
+  const emailToken = jwt.sign({ email: req.body.email }, config.jwt.secret, {
+    expiresIn: `${config.jwt.resetPasswordExpirationMinutes}m`,
+  });
+  res.status(httpStatus.OK).send({
     success: true,
     data: {
-      resetToken: resetPasswordToken.resetPasswordToken,
       emailToken,
-      message: "Otp Sent",
+      message: "OTP sent",
     },
   });
 });
@@ -49,29 +51,32 @@ const resendOtp = catchAsync(async (req, res) => {
   if (!emailToken) {
     return res.status(400).json({ success: false, message: "Email is required" });
   }
-  const decoded = jwt.verify(emailToken, process.env.JWT_SECRET);
+  const decoded = jwt.verify(emailToken, config.jwt.secret);
   const resetPasswordToken = await tokenService.generateResetPasswordToken(decoded.email, User);
 
-  await emailService.sendResetPasswordEmail(decoded.email, resetPasswordToken);
+  await emailService.sendResetPasswordEmail(decoded.email, resetPasswordToken.resetPasswordToken);
 
-  res.status(200).send({ success: true, data: resetPasswordToken.resetPasswordToken, message: "Otp Sent" });
+  res.status(200).send({ success: true, message: "Otp Sent" });
 });
 
 const verifyOtp = catchAsync(async (req, res) => {
-  const { otp } = req.body;
-  const resetPasswordTokenDoc = await tokenService.verifyToken(req.params.token, tokenTypes.RESET_PASSWORD);
-  const user = await userService.getUserById(resetPasswordTokenDoc.user, User);
+  const { otp, emailToken } = req.body;
+  const decoded = jwt.verify(emailToken, config.jwt.secret);
+  const user = await userService.getUserByEmail(decoded.email, User);
   if (!user) {
     throw new Error();
   }
-  const validOtp = await checkOtp(user._id, otp, User);
-  res.status(200).send(validOtp);
+  await checkOtp(user._id, otp, User);
+  const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, "minutes");
+  const resetToken = tokenService.generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
+  await tokenService.saveToken(resetToken, user.id, expires, tokenTypes.RESET_PASSWORD);
+  res.status(200).send({ success: true, resetToken, message: "OTP verified successfully" });
 });
 
 const resetPassword = catchAsync(async (req, res) => {
-  const data = await authService.resetPassword(req.params.token, req.body.password, User);
+  const data = await authService.resetPassword(req.query.token, req.body.password, User);
   if (data?.message) return res.status(httpStatus.BAD_REQUEST).send({ message: data.message });
-  res.status(httpStatus.OK).send({ success: true, message: "Password Reset Successfully" });
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {

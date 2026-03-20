@@ -1,5 +1,6 @@
 const request = require("supertest");
 const httpStatus = require("http-status");
+const jwt = require("jsonwebtoken");
 const httpMocks = require("node-mocks-http");
 const moment = require("moment");
 const argon2 = require("argon2");
@@ -242,14 +243,22 @@ describe("Auth routes", () => {
       jest.spyOn(emailService.transport, "sendMail").mockResolvedValue();
     });
 
-    test("should return 204 and send reset password email to the user", async () => {
+    test("should return 200 with email token and send reset password email to the user", async () => {
       await insertUsers([userOne]);
       const sendResetPasswordEmailSpy = jest.spyOn(emailService, "sendResetPasswordEmail");
 
-      await request(app).post("/v1/auth/forgot-password").send({ email: userOne.email }).expect(httpStatus.NO_CONTENT);
+      const res = await request(app)
+        .post("/v1/auth/forgot-password")
+        .send({ email: userOne.email })
+        .expect(httpStatus.OK);
 
+      expect(res.body.success).toBe(true);
       expect(sendResetPasswordEmailSpy).toHaveBeenCalledWith(userOne.email, expect.any(String));
       const resetPasswordToken = sendResetPasswordEmailSpy.mock.calls[0][1];
+      expect(res.body.data.resetToken).toBeUndefined();
+      expect(res.body.data.emailToken).toEqual(expect.any(String));
+      const emailPayload = jwt.verify(res.body.data.emailToken, config.jwt.secret);
+      expect(emailPayload.email).toBe(userOne.email);
       const dbResetPasswordTokenDoc = await Token.findOne({ token: resetPasswordToken, user: userOne._id });
       expect(dbResetPasswordTokenDoc).toBeDefined();
     });

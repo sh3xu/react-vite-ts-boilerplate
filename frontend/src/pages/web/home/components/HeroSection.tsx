@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/lib/constants/routes";
 
 export function HeroSection() {
   return (
@@ -8,10 +9,10 @@ export function HeroSection() {
       <p className="text-xl text-muted-foreground">A production-ready Rvite template with Web and Admin panels</p>
       <div className="flex gap-4 justify-center">
         <Button asChild>
-          <Link to="/dashboard">Go to Dashboard</Link>
+          <Link to={ROUTES.SHOWCASE}>View Components</Link>
         </Button>
         <Button variant="outline" asChild>
-          <Link to="/login">Login</Link>
+          <Link to={ROUTES.LOGIN}>Login</Link>
         </Button>
       </div>
     </div>

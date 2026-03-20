@@ -39,7 +39,7 @@ export function LoginForm() {
           description: "Logged in successfully",
         });
         setTimeout(() => {
-          const target = res.user?.role === "admin" ? "/admin" : "/dashboard";
+          const target = res.user?.role === "admin" ? "/admin" : "/showcase";
           window.location.href = target;
         }, 500);
       },

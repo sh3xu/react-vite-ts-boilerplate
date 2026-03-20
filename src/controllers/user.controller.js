@@ -28,17 +28,17 @@ const getUser = catchAsync(async (req, res) => {
 
 const updateUser = catchAsync(async (req, res) => {
   const newEmail = req.body.email;
-  const { id } = req.user;
+  const targetUserId = req.params.userId || req.user.id;
   if (newEmail) {
     const existingUser = await User.findOne({ email: newEmail });
-    if (existingUser && existingUser._id.toString() !== id) {
+    if (existingUser && existingUser._id.toString() !== targetUserId) {
       return res.status(400).send({ message: "Email is already taken." });
     }
   }
 
   const updateData = { ...req.body };
 
-  const user = await userService.updateUserById(id, updateData, User);
+  const user = await userService.updateUserById(targetUserId, updateData, User);
 
   res.send(user);
 });

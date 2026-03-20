@@ -41,7 +41,7 @@ export function RegisterForm() {
           description: "Account created successfully",
         });
         setTimeout(() => {
-          window.location.href = "/dashboard";
+          window.location.href = "/showcase";
         }, 500);
       },
       onError: (error: unknown) => {

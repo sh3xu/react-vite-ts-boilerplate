@@ -354,7 +354,7 @@ export function Sidebar() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => {
-                        navigate("/profile");
+                        navigate("/admin/profile");
                         handleLinkClick();
                       }}
                       className="cursor-pointer"
@@ -405,7 +405,7 @@ export function Sidebar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => {
-                    navigate("/profile");
+                    navigate("/admin/profile");
                     handleLinkClick();
                   }}
                   className="cursor-pointer"

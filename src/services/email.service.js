@@ -32,12 +32,11 @@ const sendEmail = async (to, subject, text) => {
  */
 const sendResetPasswordEmail = async (to, token) => {
   const subject = "Reset password";
-  const _resetPasswordUrl = `http://link-to-app/reset-password?token=${token.resetPasswordToken}`;
+  const _resetPasswordUrl = `http://link-to-app/reset-password?token=${token}`;
   const text = `Dear user,
-To reset your password, Here is your otp: ${token.otp}
+To reset your password, use this token: ${token}
 If you did not request any password resets, then ignore this email.`;
   await sendEmail(to, subject, text);
-  console.log();
 };
 
 const sendAccountConfirmationEmail = async (to, email, password) => {
@@ -47,7 +46,6 @@ Your account has been created by admin
 Here is your credentials,
 Email :${email} , Password: ${password} `;
   await sendEmail(to, subject, text);
-  console.log();
 };
 
 /**
