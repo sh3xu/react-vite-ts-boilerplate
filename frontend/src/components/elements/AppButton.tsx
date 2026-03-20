@@ -30,7 +30,7 @@ export function AppButton({
     <Button variant={intent} size={size} disabled={disabled || loading} {...props}>
       {loading ? <Loader2Icon data-icon="inline-start" className="animate-spin" /> : startIcon}
       {label}
-      {endIcon}
+      {!loading && endIcon}
     </Button>
   );
 }
