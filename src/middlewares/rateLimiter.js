@@ -23,15 +23,23 @@ const authLimiter = buildRateLimiter({
   skipSuccessfulRequests: true,
 });
 
+const authLoginLimiter = buildRateLimiter({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  message: "Too many login attempts, please try again later.",
+  skipSuccessfulRequests: true,
+});
+
 const sensitiveAuthLimiter = buildRateLimiter({
   windowMs: 10 * 60 * 1000,
   max: 10,
   message: "Too many sensitive auth requests, please try again later.",
-  skipSuccessfulRequests: true,
+  skipSuccessfulRequests: false,
 });
 
 module.exports = {
   apiLimiter,
   authLimiter,
+  authLoginLimiter,
   sensitiveAuthLimiter,
 };

@@ -3,12 +3,12 @@ const validate = require("../../middlewares/validate");
 const authValidation = require("../../validations/auth.validation");
 const authController = require("../../controllers/auth.controller");
 const auth = require("../../middlewares/auth");
-const { sensitiveAuthLimiter } = require("../../middlewares/rateLimiter");
+const { authLoginLimiter, sensitiveAuthLimiter } = require("../../middlewares/rateLimiter");
 
 const router = express.Router();
 
 router.post("/register", validate(authValidation.register), authController.register);
-router.post("/login", sensitiveAuthLimiter, validate(authValidation.login), authController.login);
+router.post("/login", authLoginLimiter, validate(authValidation.login), authController.login);
 router.post("/logout", validate(authValidation.logout), authController.logout);
 router.post("/refresh-tokens", validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post(
@@ -23,7 +23,7 @@ router.post(
   validate(authValidation.resetPassword),
   authController.resetPassword
 );
-router.post("/send-verification-email", auth(), authController.sendVerificationEmail);
+router.post("/send-verification-email", auth(), sensitiveAuthLimiter, authController.sendVerificationEmail);
 router.post("/verify-email", sensitiveAuthLimiter, validate(authValidation.verifyEmail), authController.verifyEmail);
 router.get("/me", auth(), authController.authMe);
 router.post("/verify-otp", sensitiveAuthLimiter, validate(authValidation.verifyotp), authController.verifyOtp);
